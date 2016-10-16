@@ -177,6 +177,7 @@ namespace omoikane
 
 		void visit(ast::binary_expression *expr)
 		{
+			out << '(';
 			expr->left->accept(this);
 			switch (expr->op)
 			{
@@ -194,6 +195,7 @@ namespace omoikane
 				break;
 			}
 			expr->right->accept(this);
+			out << ')';
 		}
 		void visit(ast::symbol *symbol)
 		{
