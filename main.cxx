@@ -186,7 +186,10 @@ namespace omoikane
 	struct real : seq<plus<digit>, one<'.'>, plus<digit>> {};
 	struct literal : sor<real, integer> {};
 	struct symbol : identifier {};
-	struct primary_expr : sor<symbol, literal> {};
+	struct bracket_open : one<'('> {};
+	struct bracket_close : one<')'> {};
+	struct bracket_expr : seq<bracket_open, class add_expr, bracket_close> {};
+	struct primary_expr : sor<symbol, literal, bracket_expr> {};
 	struct mul_op : one<'*', '/'> {};
 	struct mul_expr : seq<primary_expr, star<seq<mul_op, primary_expr>>> {};
 	struct add_op : one<'+', '-'> {};
