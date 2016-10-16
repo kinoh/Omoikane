@@ -66,7 +66,8 @@ namespace omoikane
 	public:
 		parser_state() :
 			node_stack(),
-			op_stack()
+			op_stack(),
+			marks()
 		{
 		}
 		size_t node_count()
@@ -89,7 +90,10 @@ namespace omoikane
 		}
 		std::vector<op_kind>::const_iterator op_begin()
 		{
-			return op_stack.begin();
+			size_t d = 0;
+			if (marks.size() > 0)
+				d = marks.back().op;
+			return op_stack.begin() + d;
 		}
 		std::vector<op_kind>::const_iterator op_end()
 		{
@@ -107,16 +111,34 @@ namespace omoikane
 		}
 		std::vector<ast::node *>::const_iterator node_begin()
 		{
-			return node_stack.begin();
+			size_t d = 0;
+			if (marks.size() > 0)
+				d = marks.back().node;
+			return node_stack.begin() + d;
 		}
 		std::vector<ast::node *>::const_iterator node_end()
 		{
 			return node_stack.end();
 		}
+		void mark()
+		{
+			marks.push_back(mark_index { node_stack.size(), op_stack.size() });
+		}
+		void unmark()
+		{
+			marks.pop_back();
+		}
 		void clear()
 		{
-			op_stack.clear();
-			node_stack.clear();
+			if (marks.size() == 0)
+			{
+				op_stack.clear();
+				node_stack.clear();
+				return;
+			}
+			auto i = marks.back();
+			op_stack.erase(op_stack.begin() + i.op, op_stack.end());
+			node_stack.erase(node_stack.begin() + i.node, node_stack.end());
 		}
 		ast::node *finish()
 		{
@@ -128,8 +150,14 @@ namespace omoikane
 		}
 
 	private:
+		struct mark_index
+		{
+			size_t node, op;
+		};
+
 		std::vector<ast::node *> node_stack;
 		std::vector<op_kind> op_stack;
+		std::vector<mark_index> marks;
 	};
 
 	class code_dumper : ast::visitor
@@ -290,6 +318,22 @@ namespace omoikane
 			}
 			s.clear();
 			s.push_node(left);
+		}
+	};
+	template<>
+	struct action<bracket_open>
+	{
+		static void apply(const action_input &in, parser_state &s)
+		{
+			s.mark();
+		}
+	};
+	template<>
+	struct action<bracket_close>
+	{
+		static void apply(const action_input &in, parser_state &s)
+		{
+			s.unmark();
 		}
 	};
 }
