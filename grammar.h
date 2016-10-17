@@ -9,6 +9,14 @@
 #include "parser_state.h"
 #include "code_dumper.h"
 
+#define DECLARE_ACTION(T) \
+	template<> \
+	struct action<T> \
+	{ \
+		static void apply(const action_input &, parser_state &); \
+	}
+
+
 namespace omoikane
 {
 	using namespace pegtl;
@@ -32,51 +40,15 @@ namespace omoikane
 	struct action
 		: nothing<Rule> {};
 
-	template<>
-	struct action<integer>
-	{
-		static void apply(const action_input &, parser_state &);
-	};
-	template<>
-	struct action<real>
-	{
-		static void apply(const action_input &, parser_state &);
-	};
-	template<>
-	struct action<symbol>
-	{
-		static void apply(const action_input &, parser_state &);
-	};
-	template<>
-	struct action<mul_op>
-	{
-		static void apply(const action_input &, parser_state &);
-	};
-	template<>
-	struct action<mul_expr>
-	{
-		static void apply(const action_input &, parser_state &);
-	};
-	template<>
-	struct action<add_op>
-	{
-		static void apply(const action_input &, parser_state &);
-	};
-	template<>
-	struct action<add_expr>
-	{
-		static void apply(const action_input &, parser_state &);
-	};
-	template<>
-	struct action<bracket_open>
-	{
-		static void apply(const action_input &, parser_state &);
-	};
-	template<>
-	struct action<bracket_close>
-	{
-		static void apply(const action_input &, parser_state &);
-	};
+	DECLARE_ACTION(integer);
+	DECLARE_ACTION(real);
+	DECLARE_ACTION(symbol);
+	DECLARE_ACTION(mul_op);
+	DECLARE_ACTION(mul_expr);
+	DECLARE_ACTION(add_op);
+	DECLARE_ACTION(add_expr);
+	DECLARE_ACTION(bracket_open);
+	DECLARE_ACTION(bracket_close);
 }
 
 #endif
