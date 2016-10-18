@@ -15,8 +15,6 @@ namespace omoikane
 	{
 	public:
 		parser_state();
-		size_t node_count();
-		size_t op_count();
 		void push_op(const op_kind);
 		op_kind pop_op();
 		std::vector<op_kind>::const_iterator op_begin();

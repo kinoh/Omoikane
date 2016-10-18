@@ -6,14 +6,6 @@ omoikane::parser_state::parser_state() :
 	marks()
 {
 }
-size_t omoikane::parser_state::node_count()
-{
-	return node_stack.size();
-}
-size_t omoikane::parser_state::op_count()
-{
-	return op_stack.size();
-}
 void omoikane::parser_state::push_op(const omoikane::op_kind op)
 {
 	op_stack.push_back(op);
