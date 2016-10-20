@@ -14,6 +14,8 @@ omoikane::op_kind omoikane::parser_state::pop_op(op_group group)
 {
 	if (op_stack.size() == 0)
 		return op_kind::NONE;
+	if (marks.size() > 0 && marks.back().op == op_stack.size())
+		return op_kind::NONE;
 
 	auto r = op_stack.back();
 
