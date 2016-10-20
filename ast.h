@@ -8,6 +8,7 @@ namespace omoikane
 	enum class op_kind
 	{
 		NONE,
+		POW,
 		MUL,
 		DIV,
 		ADD,
@@ -33,6 +34,8 @@ namespace omoikane
 			case op_kind::MUL:
 			case op_kind::DIV:
 				return op_group::MULTIPLICATIVE;
+			case op_kind::POW:
+				return op_group::POWER;
 			}
 			throw;
 		}
