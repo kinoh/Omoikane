@@ -2,6 +2,9 @@
 #define PARSER_STATE_H
 
 #include <cassert>
+#include <functional>
+#include <typeinfo>
+#include <typeindex>
 #include <vector>
 #include "pegtl.hh"
 
@@ -15,14 +18,10 @@ namespace omoikane
 	{
 	public:
 		parser_state();
-		void push_op(const op_kind);
-		op_kind pop_op();
-		std::vector<op_kind>::const_iterator op_begin();
-		std::vector<op_kind>::const_iterator op_end();
+		void push_op(op_kind);
+		op_kind pop_op(op_group);
 		void push_node(ast::node *);
 		ast::node *pop_node();
-		std::vector<ast::node *>::const_iterator node_begin();
-		std::vector<ast::node *>::const_iterator node_end();
 		void mark();
 		void unmark();
 		void clear();

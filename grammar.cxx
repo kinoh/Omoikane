@@ -1,6 +1,21 @@
 #include "grammar.h"
+#include <functional>
+#include <iostream>
 
 using namespace pegtl;
+
+static omoikane::ast::expression *fold_binary(omoikane::parser_state &s, omoikane::op_group group)
+{
+	auto n = dynamic_cast<omoikane::ast::expression *>(s.pop_node());
+	omoikane::op_kind op = s.pop_op(group);
+	if (op == omoikane::op_kind::NONE)
+		return n;
+	auto expr = new omoikane::ast::binary_expression;
+	expr->op = op;
+	expr->left = fold_binary(s, group);
+	expr->right = n;
+	return static_cast<omoikane::ast::expression *>(expr);
+}
 
 void omoikane::action<omoikane::integer>::apply(const action_input &in, omoikane::parser_state &s)
 {
@@ -29,19 +44,7 @@ void omoikane::action<omoikane::mul_op>::apply(const action_input &in, omoikane:
 }
 void omoikane::action<omoikane::mul_expr>::apply(const action_input &in, omoikane::parser_state &s)
 {
-	auto j = s.node_begin();
-	auto left = dynamic_cast<ast::expression *>(*j);
-	++j;
-	for (auto i = s.op_begin(); i != s.op_end(); ++i, ++j)
-	{
-		auto mul = new ast::binary_expression;
-		mul->op = *i;
-		mul->left = left;
-		mul->right = dynamic_cast<ast::expression *>(*j);
-		left = mul;
-	}
-	s.clear();
-	s.push_node(left);
+	s.push_node(fold_binary(s, op_group::MULTIPLICATIVE));
 }
 void omoikane::action<omoikane::add_op>::apply(const action_input &in, omoikane::parser_state &s)
 {
@@ -52,19 +55,7 @@ void omoikane::action<omoikane::add_op>::apply(const action_input &in, omoikane:
 }
 void omoikane::action<omoikane::add_expr>::apply(const action_input &in, omoikane::parser_state &s)
 {
-	auto j = s.node_begin();
-	auto left = dynamic_cast<ast::expression *>(*j);
-	++j;
-	for (auto i = s.op_begin(); i != s.op_end(); ++i, ++j)
-	{
-		auto mul = new ast::binary_expression;
-		mul->op = *i;
-		mul->left = left;
-		mul->right = dynamic_cast<ast::expression *>(*j);
-		left = mul;
-	}
-	s.clear();
-	s.push_node(left);
+	s.push_node(fold_binary(s, op_group::ADDITIVE));
 }
 void omoikane::action<omoikane::bracket_open>::apply(const action_input &in, omoikane::parser_state &s)
 {

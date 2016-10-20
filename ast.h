@@ -7,10 +7,35 @@ namespace omoikane
 {
 	enum class op_kind
 	{
+		NONE,
 		MUL,
 		DIV,
 		ADD,
 		SUB,
+	};
+	enum class op_group
+	{
+		ADDITIVE,
+		MULTIPLICATIVE,
+		POWER,
+		LISTING,
+	};
+
+	struct op_spec
+	{
+		static op_group group_of(op_kind op)
+		{
+			switch (op)
+			{
+			case op_kind::ADD:
+			case op_kind::SUB:
+				return op_group::ADDITIVE;
+			case op_kind::MUL:
+			case op_kind::DIV:
+				return op_group::MULTIPLICATIVE;
+			}
+			throw;
+		}
 	};
 
 	namespace ast

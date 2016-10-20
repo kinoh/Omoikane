@@ -6,26 +6,22 @@ omoikane::parser_state::parser_state() :
 	marks()
 {
 }
-void omoikane::parser_state::push_op(const omoikane::op_kind op)
+void omoikane::parser_state::push_op(omoikane::op_kind op)
 {
 	op_stack.push_back(op);
 }
-omoikane::op_kind omoikane::parser_state::pop_op()
+omoikane::op_kind omoikane::parser_state::pop_op(op_group group)
 {
+	if (op_stack.size() == 0)
+		return op_kind::NONE;
+
 	auto r = op_stack.back();
+
+	if (op_spec::group_of(r) != group)
+		return op_kind::NONE;
+
 	op_stack.pop_back();
 	return r;
-}
-std::vector<omoikane::op_kind>::const_iterator omoikane::parser_state::op_begin()
-{
-	size_t d = 0;
-	if (marks.size() > 0)
-		d = marks.back().op;
-	return op_stack.begin() + d;
-}
-std::vector<omoikane::op_kind>::const_iterator omoikane::parser_state::op_end()
-{
-	return op_stack.end();
 }
 void omoikane::parser_state::push_node(omoikane::ast::node *node)
 {
@@ -36,17 +32,6 @@ omoikane::ast::node *omoikane::parser_state::pop_node()
 	const auto r = node_stack.back();
 	node_stack.pop_back();
 	return r;
-}
-std::vector<omoikane::ast::node *>::const_iterator omoikane::parser_state::node_begin()
-{
-	size_t d = 0;
-	if (marks.size() > 0)
-		d = marks.back().node;
-	return node_stack.begin() + d;
-}
-std::vector<omoikane::ast::node *>::const_iterator omoikane::parser_state::node_end()
-{
-	return node_stack.end();
 }
 void omoikane::parser_state::mark()
 {
