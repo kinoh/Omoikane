@@ -36,6 +36,8 @@ namespace omoikane
 				return op_group::MULTIPLICATIVE;
 			case op_kind::POW:
 				return op_group::POWER;
+			case op_kind::NONE:
+				throw;
 			}
 			throw;
 		}

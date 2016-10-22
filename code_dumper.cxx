@@ -32,6 +32,8 @@ void omoikane::code_dumper::visit(omoikane::ast::binary_expression *expr)
 	case op_kind::POW:
 		out << '^';
 		break;
+	case op_kind::NONE:
+		throw;
 	}
 	expr->right->accept(this);
 	out << ')';
