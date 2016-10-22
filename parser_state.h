@@ -14,6 +14,11 @@ namespace omoikane
 {
 	using namespace pegtl;
 
+	enum class mark_type
+	{
+		PAREN,
+	};
+
 	class parser_state
 	{
 	public:
@@ -22,14 +27,15 @@ namespace omoikane
 		op_kind pop_op(op_group);
 		void push_node(ast::node *);
 		ast::node *pop_node();
-		void mark();
-		void unmark();
+		void mark(mark_type);
+		void unmark(mark_type);
 		void clear();
 		ast::node *finish();
 
 	private:
 		struct mark_index
 		{
+			mark_type type;
 			size_t node, op;
 		};
 

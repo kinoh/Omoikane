@@ -82,9 +82,9 @@ void omoikane::action<omoikane::add_expr>::apply(const action_input &in, omoikan
 }
 void omoikane::action<omoikane::paren_open>::apply(const action_input &in, omoikane::parser_state &s)
 {
-	s.mark();
+	s.mark(mark_type::PAREN);
 }
 void omoikane::action<omoikane::paren_close>::apply(const action_input &in, omoikane::parser_state &s)
 {
-	s.unmark();
+	s.unmark(mark_type::PAREN);
 }

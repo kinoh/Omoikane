@@ -35,12 +35,13 @@ omoikane::ast::node *omoikane::parser_state::pop_node()
 	node_stack.pop_back();
 	return r;
 }
-void omoikane::parser_state::mark()
+void omoikane::parser_state::mark(omoikane::mark_type type)
 {
-	marks.push_back(mark_index{ node_stack.size(), op_stack.size() });
+	marks.push_back(mark_index{ type, node_stack.size(), op_stack.size() });
 }
-void omoikane::parser_state::unmark()
+void omoikane::parser_state::unmark(omoikane::mark_type type)
 {
+	assert(marks.back().type == type);
 	marks.pop_back();
 }
 void omoikane::parser_state::clear()
