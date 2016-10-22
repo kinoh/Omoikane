@@ -21,26 +21,26 @@ namespace omoikane
 {
 	using namespace pegtl;
 
-	struct ws : one<' ', '\t', '\n', '\r'> {};
+	struct ws : star<one<' ', '\t', '\n', '\r'>> {};
 	struct integer : plus<digit> {};
 	struct real : seq<plus<digit>, one<'.'>, plus<digit>> {};
 	struct literal : sor<real, integer> {};
 	struct symbol : identifier {};
 	struct list_sep : one<','> {};
-	struct expr_list : seq<class expr, star<seq<list_sep, class expr>>> {};
+	struct expr_list : seq<class expr, star<seq<ws, list_sep, ws, class expr>>> {};
 	struct bracket_open : one<'['> {};
 	struct bracket_close : one<']'> {};
-	struct vector_expr : seq<bracket_open, expr_list, bracket_close> {};
+	struct vector_expr : seq<bracket_open, ws, expr_list, ws, bracket_close> {};
 	struct paren_open : one<'('> {};
 	struct paren_close : one<')'> {};
-	struct paren_expr : seq<paren_open, class expr, paren_close> {};
+	struct paren_expr : seq<paren_open, ws, class expr, ws, paren_close> {};
 	struct primary_expr : sor<symbol, literal, paren_expr, vector_expr> {};
 	struct pow_op : one<'^'> {};
-	struct pow_expr : seq<primary_expr, star<seq<pow_op, primary_expr>>> {};
+	struct pow_expr : seq<primary_expr, star<seq<ws, pow_op, ws, primary_expr>>> {};
 	struct mul_op : one<'*', '/'> {};
-	struct mul_expr : seq<pow_expr, star<seq<mul_op, pow_expr>>> {};
+	struct mul_expr : seq<pow_expr, star<seq<ws, mul_op, ws, pow_expr>>> {};
 	struct add_op : one<'+', '-'> {};
-	struct add_expr : seq<mul_expr, star<seq<add_op, mul_expr>>> {};
+	struct add_expr : seq<mul_expr, star<seq<ws, add_op, ws, mul_expr>>> {};
 	struct expr : sor<add_expr, vector_expr> {};
 	struct grammar : must<expr, eof> {};
 
