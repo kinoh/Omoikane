@@ -47,7 +47,7 @@ namespace omoikane
 	{
 		struct node
 		{
-			virtual void accept(class visitor*) = 0;
+			virtual void accept(class visitor *) = 0;
 			virtual ~node() {}
 		};
 		struct expression : node
@@ -56,7 +56,7 @@ namespace omoikane
 		struct symbol : expression
 		{
 			std::string name;
-			/*virtual*/void accept(visitor *v);
+			/*virtual*/void accept(visitor *);
 		};
 		struct literal : expression
 		{
@@ -64,27 +64,27 @@ namespace omoikane
 		struct integer_literal : literal
 		{
 			int value;
-			/*virtual*/void accept(visitor*);
+			/*virtual*/void accept(visitor *);
 		};
 		struct real_literal : literal
 		{
 			double value;
-			/*virtual*/void accept(visitor*);
+			/*virtual*/void accept(visitor *);
 		};
 		struct binary_expression : expression
 		{
 			op_kind op;
 			expression *left, *right;
-			/*virtual*/void accept(visitor *v);
+			/*virtual*/void accept(visitor *);
 		};
 
 		class visitor
 		{
 		public:
-			virtual void visit(symbol*) = 0;
-			virtual void visit(integer_literal*) = 0;
-			virtual void visit(real_literal*) = 0;
-			virtual void visit(binary_expression*) = 0;
+			virtual void visit(symbol *) = 0;
+			virtual void visit(integer_literal *) = 0;
+			virtual void visit(real_literal *) = 0;
+			virtual void visit(binary_expression *) = 0;
 		};
 	}
 }
