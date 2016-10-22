@@ -26,10 +26,10 @@ namespace omoikane
 	struct real : seq<plus<digit>, one<'.'>, plus<digit>> {};
 	struct literal : sor<real, integer> {};
 	struct symbol : identifier {};
-	struct bracket_open : one<'('> {};
-	struct bracket_close : one<')'> {};
-	struct bracket_expr : seq<bracket_open, class add_expr, bracket_close> {};
-	struct primary_expr : sor<symbol, literal, bracket_expr> {};
+	struct paren_open : one<'('> {};
+	struct paren_close : one<')'> {};
+	struct paren_expr : seq<paren_open, class add_expr, paren_close> {};
+	struct primary_expr : sor<symbol, literal, paren_expr> {};
 	struct pow_op : one<'^'> {};
 	struct pow_expr : seq<primary_expr, star<seq<pow_op, primary_expr>>> {};
 	struct mul_op : one<'*', '/'> {};
@@ -51,8 +51,8 @@ namespace omoikane
 	DECLARE_ACTION(mul_expr);
 	DECLARE_ACTION(add_op);
 	DECLARE_ACTION(add_expr);
-	DECLARE_ACTION(bracket_open);
-	DECLARE_ACTION(bracket_close);
+	DECLARE_ACTION(paren_open);
+	DECLARE_ACTION(paren_close);
 }
 
 #endif

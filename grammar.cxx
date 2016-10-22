@@ -80,11 +80,11 @@ void omoikane::action<omoikane::add_expr>::apply(const action_input &in, omoikan
 {
 	s.push_node(foldl_binary(s, op_group::ADDITIVE));
 }
-void omoikane::action<omoikane::bracket_open>::apply(const action_input &in, omoikane::parser_state &s)
+void omoikane::action<omoikane::paren_open>::apply(const action_input &in, omoikane::parser_state &s)
 {
 	s.mark();
 }
-void omoikane::action<omoikane::bracket_close>::apply(const action_input &in, omoikane::parser_state &s)
+void omoikane::action<omoikane::paren_close>::apply(const action_input &in, omoikane::parser_state &s)
 {
 	s.unmark();
 }
