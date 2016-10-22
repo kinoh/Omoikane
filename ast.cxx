@@ -16,3 +16,7 @@ void omoikane::ast::binary_expression::accept(omoikane::ast::visitor *v)
 {
 	v->visit(this);
 }
+void omoikane::ast::expression_list::accept(omoikane::ast::visitor *v)
+{
+	v->visit(this);
+}

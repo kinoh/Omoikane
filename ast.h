@@ -2,6 +2,7 @@
 #define AST_H
 
 #include <string>
+#include <vector>
 
 namespace omoikane
 {
@@ -13,6 +14,7 @@ namespace omoikane
 		DIV,
 		ADD,
 		SUB,
+		SEP,
 	};
 	enum class op_group
 	{
@@ -28,6 +30,8 @@ namespace omoikane
 		{
 			switch (op)
 			{
+			case op_kind::SEP:
+				return op_group::LISTING;
 			case op_kind::ADD:
 			case op_kind::SUB:
 				return op_group::ADDITIVE;
@@ -77,6 +81,11 @@ namespace omoikane
 			expression *left, *right;
 			/*virtual*/void accept(visitor *);
 		};
+		struct expression_list : expression
+		{
+			std::vector<expression *> exprs;
+			/*virtual*/void accept(visitor *v);
+		};
 
 		class visitor
 		{
@@ -85,6 +94,7 @@ namespace omoikane
 			virtual void visit(integer_literal *) = 0;
 			virtual void visit(real_literal *) = 0;
 			virtual void visit(binary_expression *) = 0;
+			virtual void visit(expression_list *) = 0;
 		};
 	}
 }

@@ -88,3 +88,34 @@ void omoikane::action<omoikane::paren_close>::apply(const action_input &in, omoi
 {
 	s.unmark(mark_type::PAREN);
 }
+void omoikane::action<omoikane::bracket_open>::apply(const action_input &in, omoikane::parser_state &s)
+{
+	s.mark(mark_type::BRACKET);
+}
+void omoikane::action<omoikane::bracket_close>::apply(const action_input &in, omoikane::parser_state &s)
+{
+	s.unmark(mark_type::BRACKET);
+}
+void omoikane::action<omoikane::list_sep>::apply(const action_input &in, omoikane::parser_state &s)
+{
+	if (in.string() == ",")
+		s.push_op(op_kind::SEP);
+}
+void omoikane::action<omoikane::expr_list>::apply(const action_input &in, omoikane::parser_state &s)
+{
+	auto n = dynamic_cast<omoikane::ast::expression *>(s.pop_node());
+
+	if (s.pop_op(op_group::LISTING) == op_kind::NONE)
+	{
+		s.push_node(n);
+		return;
+	}
+	auto list = new ast::expression_list;
+	list->exprs.insert(list->exprs.begin(), n);
+	list->exprs.insert(list->exprs.begin(), dynamic_cast<omoikane::ast::expression *>(s.pop_node()));
+	while (s.pop_op(op_group::LISTING) != op_kind::NONE)
+	{
+		list->exprs.insert(list->exprs.begin(), dynamic_cast<omoikane::ast::expression *>(s.pop_node()));
+	}
+	s.push_node(list);
+}

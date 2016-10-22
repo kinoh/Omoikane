@@ -17,6 +17,7 @@ namespace omoikane
 	enum class mark_type
 	{
 		PAREN,
+		BRACKET,
 	};
 
 	class parser_state

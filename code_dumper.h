@@ -14,6 +14,7 @@ namespace omoikane
 	private:
 		std::ostream &out;
 
+		void visit(ast::expression_list *);
 		void visit(ast::binary_expression *);
 		void visit(ast::symbol *);
 		void visit(ast::integer_literal *);

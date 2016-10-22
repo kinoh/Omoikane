@@ -11,12 +11,29 @@ void omoikane::code_dumper::dump(omoikane::ast::node *node)
 	node->accept(this);
 }
 
+void omoikane::code_dumper::visit(omoikane::ast::expression_list *list)
+{
+	out << '[';
+	bool first = true;
+	for (auto it = list->exprs.begin(); it != list->exprs.end(); ++it)
+	{
+		if (first)
+			first = false;
+		else
+			out << ',';
+		(*it)->accept(this);
+	}
+	out << ']';
+}
 void omoikane::code_dumper::visit(omoikane::ast::binary_expression *expr)
 {
 	out << '(';
 	expr->left->accept(this);
 	switch (expr->op)
 	{
+	case op_kind::SEP:
+		out << ',';
+		break;
 	case op_kind::ADD:
 		out << '+';
 		break;
